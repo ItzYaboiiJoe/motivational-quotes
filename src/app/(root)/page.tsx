@@ -1,34 +1,20 @@
-"use client";
+import React from "react";
 
-import { useEffect, useState } from "react";
-import fetchQuote from "@/components/apiCall/fetchQuote";
+async function Home() {
+  const res = await fetch("https://zenquotes.io/api/today", {
+    cache: "no-store",
+  });
+  const data = await res.json();
 
-const Home = () => {
-  const [quote, setQuote] = useState<string | null>(null);
-  const [author, setAuthor] = useState<string | null>(null);
-
-  useEffect(() => {
-    const getQuote = async () => {
-      const { quote, author } = await fetchQuote();
-      setQuote(quote);
-      setAuthor(author);
-    };
-
-    getQuote();
-  }, []);
+  const quote = data[0].q;
+  const author = data[0].a;
 
   return (
-    <div className="p-4 text-center">
-      {quote ? (
-        <>
-          <p className="text-xl italic">{quote}</p>
-          <p className="mt-2 text-lg font-semibold">— {author}</p>
-        </>
-      ) : (
-        <p>Loading...</p>
-      )}
+    <div className="flex flex-col items-center justify-center h-screen text-center p-4">
+      <p className="text-2xl italic max-w-2xl">{quote}</p>
+      <p className="mt-4 text-lg font-semibold text-gray-600">— {author}</p>
     </div>
   );
-};
+}
 
 export default Home;
